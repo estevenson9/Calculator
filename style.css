@@ -18,17 +18,17 @@
 
 .calculator-screen {
   margin-top: 10px;
-  border-style: dashed;
+  border-style: solid;
   width: 90%;
   height: 25%;
   min-height: 10%;
+  font-size: 5rem;
+  text-align: end;
 }
 
 .input-container {
   display: flex;
   align-items: center;
-  border-style: ridge;
-  border-color: blue;
   height: 90%;
   width: 90%;
 }
@@ -39,8 +39,6 @@
   justify-content: space-evenly;
   height: 100%;
   width: 100%;
-  border-style: dotted;
-  border-color: brown;
 }
 .input-row {
   width: 100%;
