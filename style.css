@@ -22,7 +22,7 @@
   width: 90%;
   height: 25%;
   min-height: 10%;
-  font-size: 5rem;
+  font-size: 3rem;
   text-align: end;
 }
 
@@ -55,4 +55,6 @@ button {
   max-height: 150px;
   aspect-ratio: 1/1;
   width: 24%;
+  font-weight: bolder;
+  font-size: large;
 }
