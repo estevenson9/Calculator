@@ -4,13 +4,53 @@ let currentInputValue = "";
 let equalsLastPressed = false;
 let modifierLastPressed = false;
 
-const calculatorScreen = document.querySelector(".calculator-screen");
+//Add keyboard interactivity
+let keyPressed = window.addEventListener("keyup", (event) => {
+  console.log(event.key);
+  switch (event.key) {
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+    case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
+    case "0":
+      numberPressed(event.key);
+      break;
 
-const allButtons = document.querySelectorAll("button");
-allButtons.forEach((button) => {
-  button.addEventListener("mouseenter", hoverEffectOn);
-  button.addEventListener("mouseleave", hoverEffectOff);
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+      modifierPressed(event.key);
+      break;
+
+    case ".":
+      putDecimal();
+      break;
+
+    case "c":
+      clearInputArray();
+      break;
+
+    case "Enter":
+      equals();
+      break;
+
+    case "Backspace":
+      deleteLastNumber();
+      break;
+
+    default:
+      break;
+  }
+  updateCalculatorScreen();
 });
+
+const calculatorScreen = document.querySelector(".calculator-screen");
 
 function hoverEffectOn() {
   this.style.border = "solid";
@@ -29,7 +69,6 @@ function deleteLastNumber() {
     0,
     currentInputValue.length - 1
   );
-  updateCalculatorScreen();
 }
 
 const decimalButton = document.querySelector(".decimal-button");
@@ -39,9 +78,8 @@ function putDecimal() {
   let decimalExists = currentInputValue.includes(".");
   if (decimalExists) {
   } else {
-    currentInputValue += this.textContent;
+    currentInputValue += ".";
   }
-  updateCalculatorScreen();
 }
 
 const clearButton = document.querySelector(".clear-button");
@@ -60,33 +98,21 @@ modifierButtonsArray.forEach((button) =>
 );
 
 const equalButton = document.querySelector(".operate-button");
-equalButton.addEventListener("click", () => {
+equalButton.addEventListener("click", equals);
+function equals() {
   if (!equalsLastPressed && !modifierLastPressed) {
     calculationArray.push(currentInputValue);
   }
   addToCalculationArray();
   equalsLastPressed = true;
   modifierLastPressed = false;
-});
+}
 
 function clearInputArray() {
   currentInputValue = "";
   calculationArray = [];
   equalsLastPressed = false;
-  updateCalculatorScreen();
-}
-
-function updateCalculatorScreen() {
-  if (currentInputValue.length < 1) {
-    if (calculationArray.length < 1) {
-      calculatorScreen.textContent = "0";
-    } else {
-      calculatorScreen.textContent =
-        Math.round(calculationArray[0] * 100) / 100;
-    }
-  } else {
-    calculatorScreen.textContent = currentInputValue;
-  }
+  // updateCalculatorScreen();
 }
 
 function calculatePairs() {
@@ -94,23 +120,27 @@ function calculatePairs() {
   if (calculationArray.length >= 3) {
     console.log(calculationArray);
     let operatedValue = operate(calculationArray);
-    if (typeof operatedValue === "number") {
-      clearInputArray();
-      calculationArray.push(operatedValue);
-    } else {
-      calculationArray.push(operatedValue);
-      updateCalculatorScreen();
-      clearInputArray();
-    }
+    clearInputArray();
+    calculationArray.push(operatedValue);
+    // updateCalculatorScreen();
+    // clearInputArray();
   }
 }
 
-function numberPressed() {
+function numberPressed(keycode = null) {
   numericalButtonsArray.forEach((button) => {
-    if (button.textContent === this.textContent) {
-      button.style.backgroundColor = "lightblue";
+    if (keycode !== null) {
+      if (button.textContent === keycode) {
+        button.style.backgroundColor = "lightblue";
+      } else {
+        button.style.backgroundColor = "";
+      }
     } else {
-      button.style.backgroundColor = "";
+      if (button.textContent === this.textContent) {
+        button.style.backgroundColor = "lightblue";
+      } else {
+        button.style.backgroundColor = "";
+      }
     }
   });
   if (equalsLastPressed) {
@@ -118,29 +148,46 @@ function numberPressed() {
     equalsLastPressed = false;
   }
   modifierLastPressed = false;
-  addToCurrentValue(this);
+  if (keycode !== null) {
+    currentInputValue += keycode;
+  } else {
+    currentInputValue += this.textContent;
+  }
 }
 
-function addToCurrentValue(reference) {
-  currentInputValue += reference.textContent;
-  updateCalculatorScreen();
-}
-
-function modifierPressed() {
+function modifierPressed(keycode = null) {
   modifierButtonsArray.forEach((button) => {
-    if (button.textContent === this.textContent) {
-      button.style.backgroundColor = "orange";
+    if (keycode !== null) {
+      if (button.textContent === keycode) {
+        button.style.backgroundColor = "orange";
+      } else {
+        button.style.backgroundColor = "";
+      }
     } else {
-      button.style.backgroundColor = "";
+      if (button.textContent === this.textContent) {
+        button.style.backgroundColor = "orange";
+      } else {
+        button.style.backgroundColor = "";
+      }
     }
   });
 
   if (!equalsLastPressed && !modifierLastPressed) {
-    calculationArray.push(currentInputValue);
-    addToCalculationArray();
-    calculationArray.push(this.textContent);
+    if (keycode !== null) {
+      calculationArray.push(currentInputValue);
+      addToCalculationArray();
+      calculationArray.push(keycode);
+    } else {
+      calculationArray.push(currentInputValue);
+      addToCalculationArray();
+      calculationArray.push(this.textContent);
+    }
   } else {
-    calculationArray[1] = this.textContent;
+    if (keycode !== null) {
+      calculationArray[1] = keycode;
+    } else {
+      calculationArray[1] = this.textContent;
+    }
   }
   modifierLastPressed = true;
   equalsLastPressed = false;
@@ -148,7 +195,7 @@ function modifierPressed() {
 
 function addToCalculationArray() {
   calculatePairs();
-  updateCalculatorScreen();
+  // updateCalculatorScreen();
   console.log(calculationArray);
 }
 
@@ -166,7 +213,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
   if (b === 0) {
-    return "Trying to break the laws of math ehh";
+    return "Not Allowed";
   }
   return a / b;
 }
@@ -190,6 +237,32 @@ function operate(inputArray) {
       return multiply(firstValue, secondValue);
     case "/":
       return divide(firstValue, secondValue);
+  }
+}
+const allButtons = document.querySelectorAll("button");
+allButtons.forEach((button) => {
+  button.addEventListener("mouseenter", hoverEffectOn);
+  button.addEventListener("mouseleave", hoverEffectOff);
+  button.addEventListener("click", updateCalculatorScreen);
+});
+
+function updateCalculatorScreen() {
+  // If user is inputting show whats inputting
+  // If user isnt inputting see if there is a current result,
+  // if there is show that, with catch for divide by 0
+  // if there isnt show 0
+  if (currentInputValue.length < 1) {
+    if (calculationArray.length < 1) {
+      calculatorScreen.textContent = "0";
+    } else if (isNaN(parseFloat(calculationArray[0]))) {
+      calculatorScreen.textContent = calculationArray[0];
+      clearInputArray();
+    } else {
+      calculatorScreen.textContent =
+        Math.round(calculationArray[0] * 100) / 100;
+    }
+  } else {
+    calculatorScreen.textContent = currentInputValue;
   }
 }
 updateCalculatorScreen();
