@@ -20,6 +20,16 @@ function hoverEffectOff() {
   this.style.border = "";
   this.style.borderColor = "";
 }
+const backspaceButton = document.querySelector(".backspace-button");
+backspaceButton.addEventListener("click", deleteLastNumber);
+
+function deleteLastNumber() {
+  currentInputValue = currentInputValue.substring(
+    0,
+    currentInputValue.length - 1
+  );
+  updateCalculatorScreen();
+}
 
 const clearButton = document.querySelector(".clear-button");
 clearButton.addEventListener("click", clearInputArray);
@@ -54,10 +64,15 @@ function clearInputArray() {
 }
 
 function updateCalculatorScreen() {
-  if (calculationArray.length < 1) {
-    calculatorScreen.textContent = "0";
+  if (currentInputValue.length < 1) {
+    if (calculationArray.length < 1) {
+      calculatorScreen.textContent = "0";
+    } else {
+      calculatorScreen.textContent =
+        Math.round(calculationArray[0] * 100) / 100;
+    }
   } else {
-    calculatorScreen.textContent = Math.round(calculationArray[0] * 100) / 100;
+    calculatorScreen.textContent = currentInputValue;
   }
 }
 
@@ -95,7 +110,7 @@ function numberPressed() {
 
 function addToCurrentValue(reference) {
   currentInputValue += reference.textContent;
-  calculatorScreen.textContent = currentInputValue;
+  updateCalculatorScreen();
 }
 
 function modifierPressed() {
