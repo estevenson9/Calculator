@@ -9,13 +9,13 @@ const allButtons = document.querySelectorAll("button");
 allButtons.forEach((button) => {
   button.addEventListener("mouseenter", hoverEffectOn);
   button.addEventListener("mouseleave", hoverEffectOff);
-  button.addEventListener("click", lastPressed);
 });
-function lastPressed() {}
+
 function hoverEffectOn() {
   this.style.border = "solid";
   this.style.borderColor = "#3c3c3c";
 }
+
 function hoverEffectOff() {
   this.style.border = "";
   this.style.borderColor = "";
@@ -38,26 +38,29 @@ modifierButtonsArray.forEach((button) =>
 
 const equalButton = document.querySelector(".operate-button");
 equalButton.addEventListener("click", () => {
-  if (!equalsLastPressed) {
+  if (!equalsLastPressed && !modifierLastPressed) {
     calculationArray.push(currentInputValue);
   }
   addToCalculationArray();
   equalsLastPressed = true;
   modifierLastPressed = false;
 });
+
 function clearInputArray() {
   currentInputValue = "";
   calculationArray = [];
   equalsLastPressed = false;
   updateCalculatorScreen();
 }
+
 function updateCalculatorScreen() {
-  if (calculationArray) {
-    calculatorScreen.textContent = calculationArray[0];
+  if (calculationArray.length < 1) {
+    calculatorScreen.textContent = "0";
   } else {
-    calculatorScreen.textContent = Math.floor(calculationArray[0] * 100) / 100;
+    calculatorScreen.textContent = Math.round(calculationArray[0] * 100) / 100;
   }
 }
+
 function calculatePairs() {
   currentInputValue = "";
   if (calculationArray.length >= 3) {
@@ -73,6 +76,7 @@ function calculatePairs() {
     }
   }
 }
+
 function numberPressed() {
   numericalButtonsArray.forEach((button) => {
     if (button.textContent === this.textContent) {
@@ -105,8 +109,6 @@ function modifierPressed() {
 
   if (!equalsLastPressed && !modifierLastPressed) {
     calculationArray.push(currentInputValue);
-  }
-  if (!modifierLastPressed) {
     addToCalculationArray();
     calculationArray.push(this.textContent);
   } else {
@@ -115,26 +117,32 @@ function modifierPressed() {
   modifierLastPressed = true;
   equalsLastPressed = false;
 }
+
 function addToCalculationArray() {
   calculatePairs();
   updateCalculatorScreen();
   console.log(calculationArray);
 }
+
 function add(a, b) {
   return a + b;
 }
+
 function subtract(a, b) {
   return a - b;
 }
+
 function multiply(a, b) {
   return a * b;
 }
+
 function divide(a, b) {
   if (b === 0) {
     return "Trying to break the laws of math ehh";
   }
   return a / b;
 }
+
 function operate(inputArray) {
   let firstValue;
   let secondValue;
@@ -154,8 +162,6 @@ function operate(inputArray) {
       return multiply(firstValue, secondValue);
     case "/":
       return divide(firstValue, secondValue);
-
-    default:
-      break;
   }
 }
+updateCalculatorScreen();
