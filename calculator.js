@@ -3,6 +3,7 @@ let calculationArray = [];
 let currentInputValue = "";
 let equalsLastPressed = false;
 let modifierLastPressed = false;
+
 const calculatorScreen = document.querySelector(".calculator-screen");
 
 const allButtons = document.querySelectorAll("button");
@@ -28,6 +29,18 @@ function deleteLastNumber() {
     0,
     currentInputValue.length - 1
   );
+  updateCalculatorScreen();
+}
+
+const decimalButton = document.querySelector(".decimal-button");
+decimalButton.addEventListener("click", putDecimal);
+
+function putDecimal() {
+  let decimalExists = currentInputValue.includes(".");
+  if (decimalExists) {
+  } else {
+    currentInputValue += this.textContent;
+  }
   updateCalculatorScreen();
 }
 
