@@ -2,10 +2,16 @@
   box-sizing: border-box;
   margin: 0;
 }
+body {
+  background-color: cornflowerblue;
+}
 .main-title {
+  background-color: white;
   text-align: center;
+  margin-bottom: 50px;
 }
 .calculator-container {
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,16 +20,24 @@
   margin-right: auto;
   width: 50vw;
   height: 75vh;
+  border-radius: 10px;
 }
 
 .calculator-screen {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background-color: black;
   margin-top: 10px;
   border-style: solid;
   width: 90%;
   height: 25%;
   min-height: 10%;
-  font-size: 3rem;
-  text-align: end;
+  font-size: 5rem;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  border-color: black;
+  color: white;
 }
 
 .input-container {
@@ -31,6 +45,7 @@
   align-items: center;
   height: 90%;
   width: 90%;
+  margin-bottom: 20px;
 }
 .number-inputs {
   display: flex;
@@ -47,7 +62,12 @@
   align-items: center;
   justify-content: space-evenly;
 }
-button {
+.input-button,
+.modifier-button,
+.operate-button,
+.decimal-button,
+.clear-button,
+.backspace-button {
   border-style: hidden;
   border-radius: 50%;
   /* height: 100%; */
@@ -57,4 +77,14 @@ button {
   width: 24%;
   font-weight: bolder;
   font-size: large;
+}
+.zero-button {
+  border-style: hidden;
+  aspect-ratio: 2/1;
+  border-radius: 25% /50%;
+  max-width: 300px;
+  max-height: 150px;
+  font-weight: bolder;
+  font-size: large;
+  width: 48%;
 }
