@@ -6,7 +6,6 @@ let modifierLastPressed = false;
 
 //Add keyboard interactivity
 let keyPressed = window.addEventListener("keyup", (event) => {
-  console.log(event.key);
   switch (event.key) {
     case "1":
     case "2":
@@ -18,14 +17,14 @@ let keyPressed = window.addEventListener("keyup", (event) => {
     case "8":
     case "9":
     case "0":
-      numberPressed(event.key);
+      numberPressed(this, event.key);
       break;
 
     case "+":
     case "-":
     case "*":
     case "/":
-      modifierPressed(event.key);
+      modifierPressed(this, event.key);
       break;
 
     case ".":
@@ -88,13 +87,17 @@ clearButton.addEventListener("click", clearInputArray);
 const numericalButtons = document.querySelectorAll(".input-button");
 const numericalButtonsArray = Array.from(numericalButtons);
 numericalButtonsArray.forEach((button) =>
-  button.addEventListener("click", numberPressed)
+  button.addEventListener("click", (reference) => {
+    numberPressed(reference, null);
+  })
 );
 
 const modifierButtons = document.querySelectorAll(".modifier-button");
 const modifierButtonsArray = Array.from(modifierButtons);
 modifierButtonsArray.forEach((button) =>
-  button.addEventListener("click", modifierPressed)
+  button.addEventListener("click", (reference) => {
+    modifierPressed(reference, null);
+  })
 );
 
 const equalButton = document.querySelector(".operate-button");
@@ -118,7 +121,6 @@ function clearInputArray() {
 function calculatePairs() {
   currentInputValue = "";
   if (calculationArray.length >= 3) {
-    console.log(calculationArray);
     let operatedValue = operate(calculationArray);
     clearInputArray();
     calculationArray.push(operatedValue);
@@ -127,16 +129,16 @@ function calculatePairs() {
   }
 }
 
-function numberPressed(keycode = null) {
+function numberPressed(reference, keyInput = null) {
   numericalButtonsArray.forEach((button) => {
-    if (keycode !== null) {
-      if (button.textContent === keycode) {
+    if (keyInput !== null) {
+      if (button.textContent === keyInput) {
         button.style.backgroundColor = "lightblue";
       } else {
         button.style.backgroundColor = "";
       }
     } else {
-      if (button.textContent === this.textContent) {
+      if (button.textContent === reference.target.textContent) {
         button.style.backgroundColor = "lightblue";
       } else {
         button.style.backgroundColor = "";
@@ -148,23 +150,23 @@ function numberPressed(keycode = null) {
     equalsLastPressed = false;
   }
   modifierLastPressed = false;
-  if (keycode !== null) {
-    currentInputValue += keycode;
+  if (keyInput !== null) {
+    currentInputValue += keyInput;
   } else {
-    currentInputValue += this.textContent;
+    currentInputValue += reference.target.textContent;
   }
 }
 
-function modifierPressed(keycode = null) {
+function modifierPressed(reference, keyInput = null) {
   modifierButtonsArray.forEach((button) => {
-    if (keycode !== null) {
-      if (button.textContent === keycode) {
+    if (keyInput !== null) {
+      if (button.textContent === keyInput) {
         button.style.backgroundColor = "orange";
       } else {
         button.style.backgroundColor = "";
       }
     } else {
-      if (button.textContent === this.textContent) {
+      if (button.textContent === reference.target.textContent) {
         button.style.backgroundColor = "orange";
       } else {
         button.style.backgroundColor = "";
@@ -173,20 +175,20 @@ function modifierPressed(keycode = null) {
   });
 
   if (!equalsLastPressed && !modifierLastPressed) {
-    if (keycode !== null) {
+    if (keyInput !== null) {
       calculationArray.push(currentInputValue);
       addToCalculationArray();
-      calculationArray.push(keycode);
+      calculationArray.push(keyInput);
     } else {
       calculationArray.push(currentInputValue);
       addToCalculationArray();
-      calculationArray.push(this.textContent);
+      calculationArray.push(reference.target.textContent);
     }
   } else {
-    if (keycode !== null) {
-      calculationArray[1] = keycode;
+    if (keyInput !== null) {
+      calculationArray[1] = keyInput;
     } else {
-      calculationArray[1] = this.textContent;
+      calculationArray[1] = reference.target.textContent;
     }
   }
   modifierLastPressed = true;
@@ -196,7 +198,6 @@ function modifierPressed(keycode = null) {
 function addToCalculationArray() {
   calculatePairs();
   // updateCalculatorScreen();
-  console.log(calculationArray);
 }
 
 function add(a, b) {
